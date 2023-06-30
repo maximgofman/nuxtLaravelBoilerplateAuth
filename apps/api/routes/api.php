@@ -24,3 +24,9 @@ Route::get('/test', function () {
         'message' => 'Hello World!',
     ]);
 });
+
+Route::post('/test', function () {
+    return response()->json([
+        'message' => 'Hello World!',
+    ]);
+});
