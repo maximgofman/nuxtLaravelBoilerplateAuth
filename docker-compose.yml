@@ -1,0 +1,54 @@
+version: "3.0"
+services:
+    webserver:
+        image: nginx:alpine
+        ports:
+            - 80:80
+        volumes:
+            - ./config/nginx:/etc/nginx
+        depends_on:
+            - frontend
+            - api
+        networks:
+            - default
+
+    api:
+        image: bitnami/laravel
+        volumes:
+            - ./apps/api:/app
+        ports:
+            - 8000:8000
+        networks:
+            - default
+
+    database:
+        image: mysql:5.7
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: laravel
+            MYSQL_PASSWORD: laravel
+            MYSQL_ROOT_PASSWORD: laravel
+        volumes:
+            - ./config/mysql:/var/lib/mysql
+        ports:
+            - 3306:3306
+        networks:
+            - default
+
+    frontend:
+        build: config/frontend/
+        volumes:
+            - ./apps/frontend:/var/www/html/frontend
+        working_dir: /var/www/html/frontend
+       # command: npm run build && npm run start
+        command: npm run dev
+        ports:
+            - 3000:3000
+        networks:
+            - default
+    redis:
+        image: redis:alpine
+        ports:
+            - 6379:6379
+        networks:
+            - default
